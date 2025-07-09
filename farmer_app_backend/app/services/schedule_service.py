@@ -1,21 +1,10 @@
+from app.repositories.schedule_repository import save_schedule
+from app.repositories.schedule_repository import get_all_schedules
+from app.mappers.schedule_mapper import map_to_schedule
 from datetime import date, timedelta
-from app.models.schedule import Schedule
-from app.repositories.schedule_repository import save_schedule, get_all_schedules
 
 def create_schedule(data):
-    required_fields = ["days_after_sowing", "fertiliser", "quantity", "unit", "farm_id"]
-    missing = [field for field in required_fields if field not in data]
-    if missing:
-        raise ValueError(f"Missing fields: {', '.join(missing)}")
-
-    schedule = Schedule(
-        days_after_sowing=data["days_after_sowing"],
-        fertiliser=data["fertiliser"],
-        quantity=data["quantity"],
-        unit=data["unit"],
-        farm_id=data["farm_id"]
-    )
-
+    schedule = map_to_schedule(data)
     return save_schedule(schedule)
 
 def get_due_schedules():
