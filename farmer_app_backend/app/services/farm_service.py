@@ -1,6 +1,6 @@
 from datetime import datetime
-from app.database import db
 from app.models.farm import Farm
+from app.repositories import farm_repository
 
 def create_farm(data):
     required_fields = ["area", "village", "crop", "sowing_date", "farmer_id"]
@@ -20,7 +20,5 @@ def create_farm(data):
         sowing_date=sowing_date,
         farmer_id=data["farmer_id"]
     )
-    db.session.add(farm)
-    db.session.commit()
 
-    return farm
+    return farm_repository.save_farm(farm)
