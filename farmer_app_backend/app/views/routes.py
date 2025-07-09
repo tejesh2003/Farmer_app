@@ -10,7 +10,6 @@ from app.services.schedule_service import get_due_schedules, create_schedule
 from app.services.bill_service import calculate_bill_for_farmer
 from app.utils.response_helper import success_response, error_response
 
-
 main_bp = Blueprint("main", __name__)
 
 # add farmer
@@ -26,15 +25,15 @@ def create_farmer_route():
         })), 201
     except ValueError as ve:
         return jsonify(error_response(str(ve))), 400
-    except Exception as e:
+    except Exception:
         return jsonify(error_response("Something went wrong")), 500
 
 # add farm (we need to send farmer_id)
 
 @main_bp.route("/farm", methods=["POST"])
 def create_farm_route():
-    data = request.json
     try:
+        data = request.json
         farm = create_farm(data)
         return jsonify(success_response({
             "id": farm.id,

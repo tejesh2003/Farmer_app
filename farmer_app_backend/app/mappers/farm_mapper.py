@@ -11,8 +11,8 @@ def validate_required_fields(data, required):
 def map_to_farm(data):
     validate_required_fields(data, ["area", "village", "crop", "sowing_date", "farmer_id"])
 
-    if not farmer_repository.exists_by_id(data["farmer_id"]):
-        raise ValueError("Invalid farmer_id: Farmer does not exist.")
+    # if not farmer_repository.exists_by_id(data["farmer_id"]):
+    #     raise ValueError("Invalid farmer_id: Farmer does not exist.")
 
     try:
         sowing_date = datetime.strptime(data["sowing_date"], "%Y-%m-%d").date()
