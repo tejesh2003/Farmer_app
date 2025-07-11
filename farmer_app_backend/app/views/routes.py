@@ -1,10 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.models.farmer import Farmer
 from app.services.farmer_service import FarmerService
 from app.services.farm_service import FarmService
 from app.services.schedule_service import ScheduleService
-from app.services.bill_service import BillService
 from app.utils.response_helper import ResponseHelper
+from app.utils.validation_utils import ValidationUtils
 
 main_bp = Blueprint("main", __name__)
 
@@ -13,67 +13,97 @@ main_bp = Blueprint("main", __name__)
 def create_farmer_route():
     try:
         data = request.json
-        farmer = FarmerService.create_farmer(data)
-        return ResponseHelper.success_response({
-            "id": farmer.id,
-            "name": farmer.name,
-        }, code=201)
-    except ValueError as ve:
-        return ResponseHelper.error_response(str(ve), code=400)
-    except Exception:
-        return ResponseHelper.error_response("Something went wrong", code=500)
 
-# add farm (we need to send farmer_id)
+        ValidationUtils.validate_required_fields(data, ["name", "phone", "language", "country"])
+        ValidationUtils.validate_phone_number(data["phone"])
+
+        farmer= FarmerService.create_farmer(name=data["name"], language=data["language"],phone=data["phone"],country=data["country"])
+        return jsonify(farmer), 201
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+
+
+# add farm (we need to send farmer_id
+
 @main_bp.route("/farm", methods=["POST"])
 def create_farm_route():
     try:
         data = request.json
-        farm = FarmService.create_farm(data)
-        return ResponseHelper.success_response({
-            "id": farm.id,
-            "village": farm.village
-        }, code=201)
+
+        ValidationUtils.validate_required_fields(data, [
+            "area", "village", "crop", "sowing_date", "farmer_id"
+        ])
+
+        farm = FarmService.create_farm(area=data["area"], village=data["village"], crop=data["crop"], sowing_date=data["sowing_date"], farmer_id=data["farmer_id"])
+
+        return jsonify(farm), 201
+
     except ValueError as ve:
-        return ResponseHelper.error_response(str(ve), code=400)
+        return jsonify({"error": str(ve)}), 400
     except Exception:
-        return ResponseHelper.error_response("Internal server error", code=500)
+        return jsonify({"error": "Something went wrong"}), 500
+
 
 # add schedule (we need to send the farm_id)
 @main_bp.route("/schedule", methods=["POST"])
 def create_schedule_route():
     try:
         data = request.json
-        schedule = ScheduleService.create_schedule(data)
-        return ResponseHelper.success_response({
-            "id": schedule.id,
-            "fertiliser": schedule.fertiliser
-        }, code=201)
+        ValidationUtils.validate_required_fields(data, [
+            "days_after_sowing", "fertiliser", "quantity", "unit", "farm_id"
+        ])
+        schedule = ScheduleService.create_schedule(**{key: data[key] for key in ["days_after_sowing", "fertiliser", "quantity", "unit", "farm_id"]})
+
+        return jsonify(schedule), 201
+    
     except ValueError as ve:
-        return ResponseHelper.error_response(str(ve), code=400)
+        return jsonify({"error": str(ve)}), 400
     except Exception:
-        return ResponseHelper.error_response("Internal server error", code=500)
+        return jsonify({"error": "Something went wrong"}), 500
+
 
 # get all schedules due for tomorrow (ntg need to be sent)
 @main_bp.route("/schedules/due", methods=["GET"])
 def due_schedules():
-    return ResponseHelper.success_response(ScheduleService.get_due_schedules())
+    try:
+        result = ScheduleService.get_due_schedules()
+        return jsonify(result), 200
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception:
+        return jsonify({"error": "Unable to fetch due schedules"}), 500
 
 # find all farmers who are growing the crop (crop should be sent)
 @main_bp.route("/farmers/by-crop", methods=["GET"])
 def by_crop():
     crop = request.args.get("crop")
     if not crop:
-        return ResponseHelper.error_response("Missing 'crop'", code=400)
+        return {"error": "Missing 'crop'"}, 400
+
     farmers = FarmerService.get_farmers_by_crop(crop)
-    return ResponseHelper.success_response([{"name": f.name, "phone": f.phone} for f in farmers])
+
+    return farmers, 200
+
 
 # given prices calc the bill (prices and farmer_id should be sent)
 @main_bp.route("/bill/<int:farmer_id>", methods=["POST"])
 def bill(farmer_id):
     try:
-        farmer = Farmer.query.get_or_404(farmer_id)
-        prices = request.json  # {"Urea": 10.0, "DAP": 25.0}
-        total = BillService.calculate_bill_for_farmer(farmer, prices)
-        return ResponseHelper.success_response({"farmer": farmer.name, "total_cost": total})
-    except Exception:
-        return ResponseHelper.error_response("Unable to calculate bill", code=500)
+        prices = request.json
+        total = ScheduleService.calculate_bill_for_farmer(farmer_id, prices)
+        return jsonify(total), 200
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500

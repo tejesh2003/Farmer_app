@@ -1,28 +1,30 @@
-import re
-from app.models.farmer import Farmer
-from app.services.country_service import get_or_create_country
-from app.repositories import farmer_repository
+from app.models.farmer import Farmer as Farmer_Model
+from app.helpers.farmer_helper import Farmer as Farmer_Helper
 
 
-def validate_required_fields(data, required):
-    missing = [f for f in required if f not in data]
-    if missing:
-        raise ValueError(f"Missing fields: {', '.join(missing)}")
+class Farmer_Mapper:
+#model_to_helper
+     @staticmethod
+     def model_to_helper(model:Farmer_Model)->Farmer_Helper:
+          return Farmer_Helper(
+               id=model.id,
+               name=model.name,
+               phone=model.phone,
+               country_id=model.country_id,
+               language=model.language,
+          )
+     
+#helper_to_model
+     @staticmethod
+     def helper_to_model(helper:Farmer_Helper)->Farmer_Model:
+          return Farmer_Model(
+               name=helper.name,
+               phone=helper.phone,
+               country_id=helper.country_id,
+               language=helper.language,
+          )
 
-def validate_phone(phone):
-    if not re.fullmatch(r"^\d{10}$", phone):
-        raise ValueError("Phone number must be a 10-digit numeric string.")
-    if farmer_repository.farmer_exists_by_phone(phone):
-        raise ValueError("Phone number already exists.")
 
-def map_to_farmer(data):
-    validate_required_fields(data, ["name", "phone", "language", "country"])
-    validate_phone(data["phone"])
-    country = get_or_create_country(data["country"])
 
-    return Farmer(
-        name=data["name"],
-        phone=data["phone"],
-        language=data["language"],
-        country_id=country.id
-    )
+
+

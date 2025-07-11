@@ -1,22 +1,25 @@
-from app.models.schedule import Schedule
-from app.repositories import farm_repository
+from app.models.schedule import Schedule as ScheduleModel
+from app.helpers.schedule_helper import Schedule as ScheduleHelper
 
+class Schedule_Mapper:
 
-def validate_required_fields(data, required):
-    missing = [f for f in required if f not in data]
-    if missing:
-        raise ValueError(f"Missing fields: {', '.join(missing)}")
+    @staticmethod
+    def model_to_helper(model: ScheduleModel) -> ScheduleHelper:
+        return ScheduleHelper(
+            id=model.id,
+            days_after_sowing=model.days_after_sowing,
+            fertiliser=model.fertiliser,
+            quantity=model.quantity,
+            unit=model.unit,
+            farm_id=model.farm_id
+        )
 
-def map_to_schedule(data):
-    validate_required_fields(data, ["days_after_sowing", "fertiliser", "quantity", "unit", "farm_id"])
-
-    # if not farm_repository.exists_by_id(data["farm_id"]):
-    #     raise ValueError("Invalid farm_id: Farm does not exist.")
-
-    return Schedule(
-        days_after_sowing=data["days_after_sowing"],
-        fertiliser=data["fertiliser"],
-        quantity=data["quantity"],
-        unit=data["unit"],
-        farm_id=data["farm_id"]
-    )
+    @staticmethod
+    def helper_to_model(helper: ScheduleHelper) -> ScheduleModel:
+        return ScheduleModel(
+            days_after_sowing=helper.days_after_sowing,
+            fertiliser=helper.fertiliser,
+            quantity=helper.quantity,
+            unit=helper.unit,
+            farm_id=helper.farm_id
+        )
