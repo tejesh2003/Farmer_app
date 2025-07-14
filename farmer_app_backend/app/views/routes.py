@@ -1,16 +1,116 @@
 from flask import Blueprint, request, jsonify
-from app.models.farmer import Farmer
 from app.services.farmer_service import FarmerService
 from app.services.farm_service import FarmService
 from app.services.schedule_service import ScheduleService
-from app.utils.response_helper import ResponseHelper
 from app.utils.validation_utils import ValidationUtils
+from app.services.user_service import User_Service
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token , set_access_cookies, unset_jwt_cookies
+from app.enums.role_enum import Role
+from app.middlewares.auth import with_jwt_data
+
 
 main_bp = Blueprint("main", __name__)
 
+#register
+@main_bp.route("/register",methods=["POST"])
+def register_user():
+    try:
+        data=request.json
+
+        ValidationUtils.user_exists_by_user_name(data["user_name"])
+        password_hash=generate_password_hash(data["password"])
+
+        user = User_Service.register_user(user_name=data["user_name"], password_hash=password_hash)
+        return jsonify(user), 201
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+
+#login
+@main_bp.route("/login", methods=["POST"])
+def login():
+    try:
+        data=request.json
+        user=User_Service.get_by_user_name(data["user_name"])
+
+        if not user or not check_password_hash(user["password_hash"],data["password"]):
+            raise ValueError("Invalid credentials")
+        
+        access_token = create_access_token(
+        identity=str(user["id"]),
+        additional_claims={"role": user["role"]}
+        )
+
+        response = jsonify({"message": "Login successful"})
+        set_access_cookies(response, access_token)
+        return response
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+
+#logout
+@main_bp.route("/logout",methods=["POST"])
+def logout():
+    try:
+        response = jsonify({"message": "Logout SuccessFul"})
+        unset_jwt_cookies(response)
+        return response
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+
+
+#change roles
+@main_bp.route("/change-role", methods=["POST"])
+@with_jwt_data
+def change_user_role(jwt_data):
+    try:
+        data=request.json
+        target_user_name=data["user_name"]
+        target_role=data["role"]
+
+        if target_role not in Role.__members__:
+            raise ValueError("Invalid role value")
+        
+        new_role=Role[target_role]
+        logged_user_role = jwt_data["role"]
+
+        if logged_user_role == Role.ADMIN.name and new_role == Role.SUPER_USER:
+             return jsonify({"error": "Admins cannot assign super_user role"})
+        
+        user=User_Service.get_by_user_name(data["user_name"])
+
+        if not user:
+            raise ValueError("User with this UserName does not exist")
+        
+        updated_user = User_Service.update_user(user_name=target_user_name, role=target_role)
+        return jsonify(updated_user), 201
+    
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+
+
 # add farmer
 @main_bp.route("/farmer", methods=["POST"])
-def create_farmer_route():
+@with_jwt_data
+def create_farmer_route(jwt_data):
     try:
         data = request.json
 
@@ -31,7 +131,8 @@ def create_farmer_route():
 # add farm (we need to send farmer_id
 
 @main_bp.route("/farm", methods=["POST"])
-def create_farm_route():
+@with_jwt_data
+def create_farm_route(jwt_data):
     try:
         data = request.json
 
@@ -51,7 +152,8 @@ def create_farm_route():
 
 # add schedule (we need to send the farm_id)
 @main_bp.route("/schedule", methods=["POST"])
-def create_schedule_route():
+@with_jwt_data
+def create_schedule_route(jwt_data):
     try:
         data = request.json
         ValidationUtils.validate_required_fields(data, [
@@ -69,7 +171,8 @@ def create_schedule_route():
 
 # get all schedules due for tomorrow (ntg need to be sent)
 @main_bp.route("/schedules/due", methods=["GET"])
-def due_schedules():
+@with_jwt_data
+def due_schedules(jwt_data):
     try:
         result = ScheduleService.get_due_schedules()
         return jsonify(result), 200
@@ -82,7 +185,8 @@ def due_schedules():
 
 # find all farmers who are growing the crop (crop should be sent)
 @main_bp.route("/farmers/by-crop", methods=["GET"])
-def by_crop():
+@with_jwt_data
+def by_crop(jwt_data):
     crop = request.args.get("crop")
     if not crop:
         return {"error": "Missing 'crop'"}, 400
@@ -94,7 +198,8 @@ def by_crop():
 
 # given prices calc the bill (prices and farmer_id should be sent)
 @main_bp.route("/bill/<int:farmer_id>", methods=["POST"])
-def bill(farmer_id):
+@with_jwt_data
+def bill(farmer_id,jwt_data):
     try:
         prices = request.json
         total = ScheduleService.calculate_bill_for_farmer(farmer_id, prices)
