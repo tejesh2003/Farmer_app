@@ -3,6 +3,7 @@ from .config import Config
 from .database import db
 from flask_jwt_extended import JWTManager
 from .views.routes import main_bp
+from app.utils.seed_utils import seed_roles
 
 def create_app():
     app = Flask(__name__)
@@ -15,5 +16,6 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        seed_roles()
 
     return app

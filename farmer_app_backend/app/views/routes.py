@@ -5,8 +5,8 @@ from app.services.schedule_service import ScheduleService
 from app.utils.validation_utils import ValidationUtils
 from app.services.user_service import User_Service
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.models.roles import Role
 from flask_jwt_extended import create_access_token , set_access_cookies, unset_jwt_cookies
-from app.enums.role_enum import Role
 from app.middlewares.auth import with_jwt_data
 
 
@@ -17,6 +17,9 @@ main_bp = Blueprint("main", __name__)
 def register_user():
     try:
         data=request.json
+
+        if " " in data["user_name"]:
+          return {"message": "Username should not contain spaces."}, 400
 
         ValidationUtils.user_exists_by_user_name(data["user_name"])
         password_hash=generate_password_hash(data["password"])
@@ -40,10 +43,11 @@ def login():
 
         if not user or not check_password_hash(user["password_hash"],data["password"]):
             raise ValueError("Invalid credentials")
-        
+        roles = user.get("roles", ["USER"])
+                                   
         access_token = create_access_token(
         identity=str(user["id"]),
-        additional_claims={"role": user["role"]}
+        additional_claims={"roles": roles}
         )
 
         response = jsonify({"message": "Login successful"})
@@ -74,29 +78,30 @@ def logout():
 
 
 #change roles
-@main_bp.route("/change-role", methods=["POST"])
+@main_bp.route("/add-role", methods=["POST"])
 @with_jwt_data
-def change_user_role(jwt_data):
+def add_user_role(jwt_data):
     try:
         data=request.json
         target_user_name=data["user_name"]
         target_role=data["role"]
-
-        if target_role not in Role.__members__:
-            raise ValueError("Invalid role value")
         
-        new_role=Role[target_role]
-        logged_user_role = jwt_data["role"]
+        logged_user_roles = jwt_data.get("roles", [])
 
-        if logged_user_role == Role.ADMIN.name and new_role == Role.SUPER_USER:
-             return jsonify({"error": "Admins cannot assign super_user role"})
+        if "ADMIN" in logged_user_roles and target_role == "SUPER_USER":
+            return jsonify({"error": "Admins cannot assign super_user role"}), 403
+        
+        role_obj = Role.query.filter_by(name=target_role).first()
+        if not role_obj:
+            return jsonify({"error": f"Role '{target_role}' does not exist"}), 400
+
         
         user=User_Service.get_by_user_name(data["user_name"])
 
         if not user:
             raise ValueError("User with this UserName does not exist")
         
-        updated_user = User_Service.update_user(user_name=target_user_name, role=target_role)
+        updated_user = User_Service.add_user(user_name=target_user_name, role=role_obj)
         return jsonify(updated_user), 201
     
     except ValueError as ve:
@@ -105,7 +110,39 @@ def change_user_role(jwt_data):
         import traceback
         traceback.print_exc()
         return jsonify({"error": "Something went wrong"}), 500
+    
+@main_bp.route("/remove-role", methods=["POST"])
+@with_jwt_data
+def remove_user_role(jwt_data):
+    try:
+        data=request.json
+        target_user_name=data["user_name"]
+        target_role=data["role"]
+        
+        logged_user_roles = jwt_data.get("roles", [])
 
+        if "ADMIN" in logged_user_roles and target_role == "SUPER_USER":
+            return jsonify({"error": "Admins cannot remove super_user role"}), 403
+        
+        role_obj = Role.query.filter_by(name=target_role).first()
+        if not role_obj:
+            return jsonify({"error": f"Role '{target_role}' does not exist"}), 400
+
+        
+        user=User_Service.get_by_user_name(data["user_name"])
+
+        if not user:
+            raise ValueError("User with this UserName does not exist")
+        
+        updated_user = User_Service.remove_user(user_name=target_user_name, role=role_obj)
+        return jsonify(updated_user), 201
+    
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
 
 # add farmer
 @main_bp.route("/farmer", methods=["POST"])

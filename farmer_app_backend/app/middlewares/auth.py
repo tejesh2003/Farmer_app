@@ -8,15 +8,15 @@ def with_jwt_data(func):
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         jwt_data = get_jwt()
-        user_role = jwt_data["role"]
+        user_roles = jwt_data.get("roles", ["USER"]) 
         route_path=request.path
         if "bill" in route_path:
             allowed_route_paths = ROUTE_ROLE_PERMISSIONS.get("/bill", [])
         else:
             allowed_route_paths = ROUTE_ROLE_PERMISSIONS.get(route_path,[])
 
-        if user_role not in allowed_route_paths:
-            return jsonify({"error": "Access forbidden for the role"}),403
+        if not any(role in allowed_route_paths for role in user_roles):
+            return jsonify({"error": "Access forbidden for your roles"}), 403
 
         return func(jwt_data=jwt_data, *args, **kwargs)
     return wrapper
