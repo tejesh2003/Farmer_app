@@ -79,7 +79,7 @@ def logout():
 
 #change roles
 @main_bp.route("/add-role", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def add_user_role(jwt_data):
     try:
         data=request.json
@@ -112,7 +112,7 @@ def add_user_role(jwt_data):
         return jsonify({"error": "Something went wrong"}), 500
     
 @main_bp.route("/remove-role", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def remove_user_role(jwt_data):
     try:
         data=request.json
@@ -146,7 +146,7 @@ def remove_user_role(jwt_data):
 
 # add farmer
 @main_bp.route("/farmer", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def create_farmer_route(jwt_data):
     try:
         data = request.json
@@ -168,7 +168,7 @@ def create_farmer_route(jwt_data):
 # add farm (we need to send farmer_id
 
 @main_bp.route("/farm", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def create_farm_route(jwt_data):
     try:
         data = request.json
@@ -189,7 +189,7 @@ def create_farm_route(jwt_data):
 
 # add schedule (we need to send the farm_id)
 @main_bp.route("/schedule", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def create_schedule_route(jwt_data):
     try:
         data = request.json
@@ -208,7 +208,7 @@ def create_schedule_route(jwt_data):
 
 # get all schedules due for tomorrow (ntg need to be sent)
 @main_bp.route("/schedules/due", methods=["GET"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
 def due_schedules(jwt_data):
     try:
         result = ScheduleService.get_due_schedules()
@@ -222,7 +222,7 @@ def due_schedules(jwt_data):
 
 # find all farmers who are growing the crop (crop should be sent)
 @main_bp.route("/farmers/by-crop", methods=["GET"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
 def by_crop(jwt_data):
     crop = request.args.get("crop")
     if not crop:
@@ -235,7 +235,7 @@ def by_crop(jwt_data):
 
 # given prices calc the bill (prices and farmer_id should be sent)
 @main_bp.route("/bill/<int:farmer_id>", methods=["POST"])
-@with_jwt_data
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
 def bill(farmer_id,jwt_data):
     try:
         prices = request.json
