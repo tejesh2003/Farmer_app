@@ -1,7 +1,6 @@
-from app.models.farm import Farm
+from app.models import Farm, Schedule
 from app.database import db
-from app.mappers.farm_mapper import Farm_Mapper
-from app.models.schedule import Schedule
+from app.mappers import Farm_Mapper
 
 class FarmRepository:
 

@@ -1,13 +1,10 @@
 from flask import Blueprint, request, jsonify
-from app.services.farmer_service import FarmerService
-from app.services.farm_service import FarmService
-from app.services.schedule_service import ScheduleService
+from app.services import FarmerService, FarmService, ScheduleService, User_Service
 from app.utils.validation_utils import ValidationUtils
-from app.services.user_service import User_Service
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.models.roles import Role
+from app.models import Role
 from flask_jwt_extended import create_access_token , set_access_cookies, unset_jwt_cookies
 from app.middlewares.auth import with_jwt_data
+import bcrypt
 
 
 main_bp = Blueprint("main", __name__)
@@ -22,7 +19,7 @@ def register_user():
           return {"message": "Username should not contain spaces."}, 400
 
         ValidationUtils.user_exists_by_user_name(data["user_name"])
-        password_hash=generate_password_hash(data["password"])
+        password_hash = bcrypt.hashpw(data["password"].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         user = User_Service.register_user(user_name=data["user_name"], password_hash=password_hash)
         return jsonify(user), 201
@@ -41,7 +38,7 @@ def login():
         data=request.json
         user=User_Service.get_by_user_name(data["user_name"])
 
-        if not user or not check_password_hash(user["password_hash"],data["password"]):
+        if not user or not bcrypt.checkpw(data["password"].encode('utf-8'),user["password_hash"].encode('utf-8')):
             raise ValueError("Invalid credentials")
         roles = user.get("roles", ["USER"])
                                    

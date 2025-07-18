@@ -1,13 +1,13 @@
 from typing import Optional, List
-from app.models.roles import Role 
+from app.models import Role 
 
 class User:
     def __init__(
         self,
-        id: Optional[str] = "",
-        user_name: str = "",
+        user_name: str,
         password_hash: Optional[str] = "",
         roles: Optional[List[Role]] = None,
+        id: Optional[str] = "",
     ):
         self.id = id
         self.user_name = user_name
@@ -22,10 +22,10 @@ class User:
             "password_hash": self.password_hash,
         }
 
-    @staticmethod
-    def from_dict(data: dict):
-        return User(
-            id=data.get("id", ""),
+    @classmethod
+    def from_dict(cls, data: dict) -> "User":
+        return cls(
+            id=data.get("id"),
             user_name=data["user_name"],
             password_hash=data.get("password_hash", ""),
             roles=data.get("roles", []),

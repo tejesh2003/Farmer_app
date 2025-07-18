@@ -1,5 +1,5 @@
-from app.models.schedule import Schedule as ScheduleModel
-from app.helpers.schedule_helper import Schedule as ScheduleHelper
+from app.models import Schedule as ScheduleModel
+from app.helpers import Schedule as ScheduleHelper
 
 class Schedule_Mapper:
 
@@ -17,6 +17,7 @@ class Schedule_Mapper:
     @staticmethod
     def helper_to_model(helper: ScheduleHelper) -> ScheduleModel:
         return ScheduleModel(
+            id=helper.id,
             days_after_sowing=helper.days_after_sowing,
             fertiliser=helper.fertiliser,
             quantity=helper.quantity,

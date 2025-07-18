@@ -1,10 +1,5 @@
 from app.database import db
-
-user_roles = db.Table(
-    "user_roles",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("role_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True)
-)
+from app.models import user_roles
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +7,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     roles = db.relationship(
     "Role",
-    secondary="user_roles",
+    secondary=user_roles,
     backref=db.backref("users", lazy="dynamic"),
     lazy="joined"
 )

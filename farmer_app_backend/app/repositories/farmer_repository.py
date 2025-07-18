@@ -1,6 +1,6 @@
-from app.models.farmer import Farmer
+from app.models import Farmer
 from app.database import db
-from app.mappers.farmer_mapper import Farmer_Mapper
+from app.mappers import Farmer_Mapper
 
 class FarmerRepository:
 

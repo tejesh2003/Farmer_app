@@ -1,7 +1,7 @@
-from app.models.user import User
+from app.models import User
 from app.database import db
-from app.mappers.user_mapper import User_Mapper 
-from app.models.roles import Role
+from app.mappers import User_Mapper 
+from app.models import Role
 
 class UserRepository:
 

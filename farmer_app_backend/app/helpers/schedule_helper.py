@@ -3,12 +3,12 @@ from typing import Optional
 class Schedule:
     def __init__(
         self,
+        days_after_sowing: int,
+        fertiliser: str,
+        quantity: float,
+        unit: str,
+        farm_id: int,
         id: Optional[int] = None,
-        days_after_sowing: int = 0,
-        fertiliser: str = "",
-        quantity: float = 0.0,
-        unit: str = "",
-        farm_id: int = 0
     ):
         self.id = id
         self.days_after_sowing = days_after_sowing
@@ -27,9 +27,10 @@ class Schedule:
             "farm_id": self.farm_id
         }
 
-    @staticmethod
-    def from_dict(data: dict):
-        return Schedule(
+    @classmethod
+    def from_dict(cls, data: dict)->"Schedule":
+        return cls(
+            id=data.get("id"),
             days_after_sowing=data["days_after_sowing"],
             fertiliser=data["fertiliser"],
             quantity=data["quantity"],

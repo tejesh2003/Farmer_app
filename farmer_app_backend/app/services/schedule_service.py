@@ -1,7 +1,7 @@
 from datetime import date, timedelta, datetime
-from app.repositories.schedule_repository import ScheduleRepository
-from app.helpers.schedule_helper  import Schedule as ScheduleHelper
-from app.services.farm_service import FarmService
+from app.repositories import ScheduleRepository
+from app.helpers import Schedule as ScheduleHelper
+from app.services import FarmService
 
 class ScheduleService:
 

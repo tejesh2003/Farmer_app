@@ -1,9 +1,7 @@
 # app/services/farmer_service.py
-from app.models.farmer import Farmer
-from app.repositories.farmer_repository import FarmerRepository
-from app.repositories.farm_repository import FarmRepository
-from app.services.country_service import CountryService
-from app.helpers.farmer_helper import Farmer as FarmerHelper
+from app.repositories import FarmerRepository, FarmRepository
+from app.services import CountryService
+from app.helpers import Farmer as FarmerHelper
 
 class FarmerService:
 

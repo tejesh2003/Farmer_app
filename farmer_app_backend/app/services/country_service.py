@@ -1,6 +1,5 @@
-from app.models.country import Country
-from app.repositories.country_repository import CountryRepository
-from app.helpers.country_helper import Country as CountryHelper
+from app.repositories import CountryRepository
+from app.helpers import Country as CountryHelper
 
 
 class CountryService:

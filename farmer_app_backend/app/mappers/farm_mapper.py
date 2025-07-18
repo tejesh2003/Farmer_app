@@ -1,5 +1,5 @@
-from app.models.farm import Farm as FarmModel
-from app.helpers.farm_helper import Farm as FarmHelper
+from app.models import Farm as FarmModel
+from app.helpers import Farm as FarmHelper
 
 class Farm_Mapper:
 
@@ -11,14 +11,17 @@ class Farm_Mapper:
             village=model.village,
             crop=model.crop,
             sowing_date=model.sowing_date,
-            farmer_id=model.farmer_id
+            farmer_id=model.farmer_id,
+            schedules=model.schedules
         )
     @staticmethod
     def helper_to_model(helper: FarmHelper) -> FarmModel:
         return FarmModel(
+            id=helper.id,
             area=helper.area,
             village=helper.village,
             crop=helper.crop,
             sowing_date=helper.sowing_date,
-            farmer_id=helper.farmer_id
+            farmer_id=helper.farmer_id,
+            schedules=helper.schedules
         )

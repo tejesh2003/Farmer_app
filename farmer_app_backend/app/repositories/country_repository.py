@@ -1,8 +1,8 @@
 # app/repositories/country_repository.py
 
-from app.models.country import Country
+from app.models import Country
 from app.database import db
-from app.mappers.country_mapper import Country_Mapper
+from app.mappers import Country_Mapper
 
 class CountryRepository:
 

@@ -1,6 +1,6 @@
-from app.helpers.user_helper import User as UserHelper
-from app.repositories.user_repository import UserRepository
-from app.models.roles import Role
+from app.helpers import User as UserHelper
+from app.repositories import UserRepository
+from app.models import Role
 
 class User_Service:
 

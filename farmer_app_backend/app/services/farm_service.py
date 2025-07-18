@@ -1,8 +1,7 @@
 # app/services/farm_service.py
 from datetime import datetime
-from app.models.farm import Farm
-from app.repositories.farm_repository import FarmRepository
-from app.helpers.farm_helper import Farm as FarmHelper
+from app.repositories import FarmRepository
+from app.helpers import Farm as FarmHelper
 
 class FarmService:
 

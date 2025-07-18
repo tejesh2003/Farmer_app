@@ -1,5 +1,5 @@
-from app.models.user import User as User_Model
-from app.helpers.user_helper import User as User_Helper
+from app.models import User as User_Model
+from app.helpers import User as User_Helper
 
 class User_Mapper:
 
@@ -15,6 +15,7 @@ class User_Mapper:
     @staticmethod
     def helper_to_model(helper: User_Helper) -> User_Model:
         return User_Model(
+            id=helper.id,
             user_name=helper.user_name,
             password_hash=helper.password_hash,
             roles=helper.roles 

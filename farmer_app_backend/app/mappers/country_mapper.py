@@ -1,5 +1,5 @@
-from app.models.country import Country as Country_Model
-from app.helpers.country_helper import Country as Country_Helper
+from app.models import Country as Country_Model
+from app.helpers import Country as Country_Helper
 
 
 class Country_Mapper:
@@ -9,6 +9,7 @@ class Country_Mapper:
           return Country_Helper(
                id=model.id,
                country_name=model.country_name,
+               farmers=model.farmers
           )
      
 #helper_to_model
@@ -16,6 +17,8 @@ class Country_Mapper:
      def helper_to_model(helper:Country_Helper)->Country_Model:
           return Country_Model(
                country_name=helper.country_name,
+               id=helper.id,
+               farmers=helper.farmers
           )
 
 
