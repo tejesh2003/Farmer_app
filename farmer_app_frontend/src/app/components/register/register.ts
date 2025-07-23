@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const apiUrl = environment.apiBaseUrl;
 

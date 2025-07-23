@@ -7,9 +7,12 @@ class Config:
 
     JWT_SECRET_KEY = "BATMAN"
 
-    JWT_TOKEN_LOCATION = ["cookies"]
-    JWT_ACCESS_COOKIE_NAME = "access_token_cookie"
-    JWT_COOKIE_CSRF_PROTECT = True
-    JWT_CSRF_IN_COOKIES = True
-    JWT_CSRF_HEADER_NAME = "X-CSRF-TOKEN"
-    JWT_COOKIE_SECURE = False
+    JWT_TOKEN_LOCATION = ["headers"] 
+
+    # JWT_TOKEN_LOCATION = ["cookies"]
+    # JWT_ACCESS_COOKIE_NAME = "access_token_cookie"
+    # JWT_COOKIE_CSRF_PROTECT = True
+    # JWT_CSRF_IN_COOKIES = True
+    # JWT_CSRF_HEADER_NAME = "X-CSRF-TOKEN"
+    # JWT_COOKIE_SECURE = False
+    # JWT_COOKIE_SAMESITE = "Lax" 

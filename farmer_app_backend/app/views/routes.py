@@ -44,11 +44,19 @@ def login():
                                    
         access_token = create_access_token(
         identity=str(user["id"]),
-        additional_claims={"roles": roles}
+        additional_claims={
+            "roles": roles,
+            "user_name": user["user_name"]
+            }
         )
 
-        response = jsonify({"message": "Login successful"})
-        set_access_cookies(response, access_token)
+        # response = jsonify({"message": "Login successful"})
+        # set_access_cookies(response, access_token) 
+        response = jsonify({
+          "message": "Login successful",
+          "access_token": access_token
+        })
+        
         return response
 
     except ValueError as ve:
@@ -59,19 +67,19 @@ def login():
         return jsonify({"error": "Something went wrong"}), 500
 
 #logout
-@main_bp.route("/logout",methods=["POST"])
+@main_bp.route("/logout", methods=["POST"])
 def logout():
     try:
-        response = jsonify({"message": "Logout SuccessFul"})
-        unset_jwt_cookies(response)
-        return response
+        return jsonify({"message": "Logout successful"}), 200
 
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
+
     except Exception:
         import traceback
         traceback.print_exc()
         return jsonify({"error": "Something went wrong"}), 500
+
 
 
 #change roles
@@ -108,6 +116,24 @@ def add_user_role(jwt_data):
         traceback.print_exc()
         return jsonify({"error": "Something went wrong"}), 500
     
+@main_bp.route("/get-user", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER","ADMIN", "SUPER_USER"])
+def get_user(jwt_data):
+    try:
+        user_name=jwt_data.get("user_name",[])
+        roles = jwt_data.get("roles", [])
+        id=jwt_data.get("sub",[])
+
+        return jsonify({"user_name":user_name, "roles":roles, "id":id}), 201
+    
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
+    
+
 @main_bp.route("/remove-role", methods=["POST"])
 @with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
 def remove_user_role(jwt_data):

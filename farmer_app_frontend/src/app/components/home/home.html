@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+
+<ng-container *ngIf="user$ | async as user; else loading">
+  <div class="flex flex-col h-screen bg-gray-100 pt-18">
+    <div class="flex flex-1 overflow-hidden"> <aside class="w-64 bg-white shadow-md p-6 space-y-4 text-gray-700 overflow-y-auto">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Menu</h2>
+
+        <ng-container *ngIf="user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_USER')">
+          <button (click)="setView('create-farmer')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farmer'">Create Farmer</button>
+          <button (click)="setView('create-farm')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farm'">Create Farm</button>
+          <button (click)="setView('create-schedule')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-schedule'">Create Schedule</button>
+          <button (click)="setView('add-role')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'add-role'">Add Role</button>
+          <button (click)="setView('remove-role')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'remove-role'">Remove Role</button>
+        </ng-container>
+
+        <button (click)="setView('farmers-by-crop')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'farmers-by-crop'">Farmers by Crop</button>
+        <button (click)="setView('bill')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'bill'">Get Bill</button>
+        <button (click)="setView('schedules-due')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'schedules-due'">Schedules Due</button>
+        <button (click)="setView('get-farmers')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-farmers'">Get Farmers</button>
+        <button (click)="setView('get-farms')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-farms'">Get Farms</button>
+        <button (click)="setView('get-schedules')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-schedules'">Get Schedules</button>
+      </aside>
+
+      <main class="flex-grow p-6 overflow-y-auto">
+        <ng-container [ngSwitch]="activeView">
+          <div *ngSwitchCase="'welcome'" class="flex items-center justify-center h-full">
+            <h1 class="text-4xl font-bold text-gray-800">Welcome, {{ user.user_name }}</h1>
+          </div>
+
+          <app-create-farmer *ngSwitchCase="'create-farmer'"></app-create-farmer>
+          <app-create-farm *ngSwitchCase="'create-farm'"></app-create-farm>
+          <app-create-schedule *ngSwitchCase="'create-schedule'"></app-create-schedule>
+          <app-add-role *ngSwitchCase="'add-role'"></app-add-role>
+          <app-remove-role *ngSwitchCase="'remove-role'"></app-remove-role>
+          <app-farmers-by-crop *ngSwitchCase="'farmers-by-crop'"></app-farmers-by-crop>
+          <app-getbill *ngSwitchCase="'bill'"></app-getbill>
+          <app-schedules-due *ngSwitchCase="'schedules-due'"></app-schedules-due>
+          <app-farmers *ngSwitchCase="'get-farmers'"></app-farmers>
+          <app-farms *ngSwitchCase="'get-farms'"></app-farms>
+          <app-schedules *ngSwitchCase="'get-schedules'"></app-schedules>
+        </ng-container>
+      </main>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="min-h-screen flex items-center justify-center text-xl text-gray-500 font-medium">
+    Loading user data...
+  </div>
+</ng-template>

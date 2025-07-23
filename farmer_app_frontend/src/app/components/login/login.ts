@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button'
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-const apiUrl=environment.apiBaseUrl;
 
 @Component({
   selector: 'app-login',
@@ -21,15 +19,23 @@ export class Login {
     password: new FormControl('')
   });
 
-  constructor(private http: HttpClient){}
+  constructor(private authService: AuthService) {}
 
-  onSubmit(){
-    const payload=this.form.value;
+  onSubmit() {
+    if (this.form.invalid) return;
+    const payload = {
+      user_name: this.form.value.user_name ?? '',
+      password: this.form.value.password ?? ''
+    };
 
-    this.http.post(apiUrl+'/login', payload)
-    .subscribe({
-      next : res => console.log('success',res),
-      error: res=> console.log('error',res)
-    })
+
+    this.authService.login(payload).subscribe({
+      next: user => {
+        console.log('Logged in as:', user);
+      },
+      error: err => {
+        console.log('Login failed:', err);
+      }
+    });
   }
 }
