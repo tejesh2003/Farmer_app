@@ -1,1 +1,37 @@
-<p>create-schedule works!</p>
+<form [formGroup]="scheduleForm" class="space-y-4 p-6 max-w-md mx-auto bg-white shadow rounded">
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Fertiliser</label>
+    <input type="text" formControlName="fertiliser" class="w-full p-2 border border-gray-300 rounded" />
+  </div>
+
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Quantity</label>
+    <input type="number" formControlName="quantity" class="w-full p-2 border border-gray-300 rounded" />
+  </div>
+
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Unit</label>
+    <select formControlName="unit" class="w-full p-2 border border-gray-300 rounded">
+      <option value="kg">kg</option>
+      <option value="L">L</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Days After Sowing</label>
+    <input type="number" formControlName="days_after_sowing" class="w-full p-2 border border-gray-300 rounded" />
+  </div>
+
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Farm ID</label>
+    <input type="number" formControlName="farm_id" class="w-full p-2 border border-gray-300 rounded" />
+  </div>
+
+  <button type="button" (click)="submit()" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700">
+    Create Schedule
+  </button>
+</form>
+
+<div *ngIf="success" class="mt-4 text-green-700 text-center font-medium">
+  Schedule created successfully
+</div>

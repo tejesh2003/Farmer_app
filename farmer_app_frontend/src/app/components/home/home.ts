@@ -13,11 +13,13 @@ import { SchedulesDue } from '../schedules-due/schedules-due';
 import { CreateSchedule } from '../create-schedule/create-schedule';
 import { CreateFarm } from '../create-farm/create-farm';
 import { CreateFarmer } from '../create-farmer/create-farmer';
+import { FarmersWithCrop } from '../farmers-with-crop/farmers-with-crop';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [[CommonModule, Navbar, FarmersByCrop, AddRole, RemoveRole, Getbill, Farmers, Farms, Schedules, SchedulesDue, CreateSchedule, CreateFarm,CreateFarmer]],
+  imports: [[CommonModule, Navbar, FarmersByCrop, FarmersWithCrop, AddRole, RemoveRole, Getbill, Farmers, Farms, Schedules, SchedulesDue, CreateSchedule, CreateFarm,CreateFarmer]],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

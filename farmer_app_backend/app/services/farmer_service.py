@@ -39,3 +39,20 @@ class FarmerService:
 
         return [FarmerHelper.to_dict(helper) for helper in farmer_helpers]
         
+    @staticmethod
+    def get_farmers_with_crop():
+        farmer_helpers = FarmerRepository.get_all_farmers()
+        if not farmer_helpers:
+            return []
+        
+        filtered = []
+        for helper in farmer_helpers:
+            farmer_dict = FarmerHelper.to_dict(helper)
+            farms = farmer_dict.get("farms", [])
+            if isinstance(farms, list) and len(farms) > 0:
+                filtered.append(farmer_dict)
+
+        return filtered
+
+
+       

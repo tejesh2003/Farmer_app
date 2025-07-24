@@ -1,1 +1,11 @@
-<p>schedules-due works!</p>
+<div *ngFor="let schedule of schedules" 
+     class="w-56 h-56 bg-white shadow-sm rounded-lg p-2 border border-gray-200 flex flex-col justify-center items-center text-center">
+
+  <h4 class="text-lg font-semibold text-gray-800 mb-1">
+    {{ schedule.fertiliser }} ({{ schedule.quantity }} {{ schedule.unit }})
+  </h4>
+
+  <p class="text-sm text-gray-700">Farm ID: {{ schedule.farm_id }}</p>
+  <p class="text-sm text-gray-700">Due: {{ schedule.due_date }}</p>
+  <p class="text-sm text-gray-700">Days After Sowing: {{ schedule.days_after_sowing }}</p>
+</div>

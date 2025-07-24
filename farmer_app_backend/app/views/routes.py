@@ -255,6 +255,21 @@ def by_crop(jwt_data):
 
     return farmers, 200
 
+@main_bp.route("/farmers/with-crop", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
+def with_crop(jwt_data):
+    try:
+        farmers = FarmerService.get_farmers_with_crop()
+        return farmers, 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+    
+
 
 # given prices calc the bill (prices and farmer_id should be sent)
 @main_bp.route("/bill/<int:farmer_id>", methods=["POST"])

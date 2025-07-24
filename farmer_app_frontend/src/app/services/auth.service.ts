@@ -20,7 +20,10 @@ export class AuthService {
       this.tokenSubject.next(token);
       this.fetchUser(token).subscribe({
         next: user => this.setUser(user),
-        error: () => this.clearUser()
+        error: () => {
+          this.clearUser();
+          this.removeToken();
+        }
       });
     }
   }

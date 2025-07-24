@@ -20,3 +20,10 @@ class FarmerRepository:
     def get_farmers_by_ids(farmer_ids: list[int]):
         farmers = Farmer.query.filter(Farmer.id.in_(farmer_ids)).all()
         return [Farmer_Mapper.model_to_helper(farmer) for farmer in farmers]
+    
+    @staticmethod
+    def get_all_farmers():
+        farmers = Farmer.query.all()
+        return [Farmer_Mapper.model_to_helper(farmer) for farmer in farmers]
+
+  
