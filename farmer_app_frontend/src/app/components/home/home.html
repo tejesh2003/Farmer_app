@@ -17,9 +17,6 @@
         <button (click)="setView('farmers-with-crop')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'farmers-with-crop'">Farmers with Crop</button>
         <button (click)="setView('bill')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'bill'">Get Bill</button>
         <button (click)="setView('schedules-due')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'schedules-due'">Schedules Due</button>
-        <button (click)="setView('get-farmers')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-farmers'">All Farmers</button>
-        <button (click)="setView('get-farms')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-farms'">All Farms</button>
-        <button (click)="setView('get-schedules')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'get-schedules'">All Schedules</button>
       </aside>
 
       <main class="flex-grow p-6 overflow-y-auto">
@@ -37,9 +34,6 @@
           <app-farmers-with-crop *ngSwitchCase="'farmers-with-crop'"></app-farmers-with-crop>
           <app-getbill *ngSwitchCase="'bill'"></app-getbill>
           <app-schedules-due *ngSwitchCase="'schedules-due'"></app-schedules-due>
-          <app-farmers *ngSwitchCase="'get-farmers'"></app-farmers>
-          <app-farms *ngSwitchCase="'get-farms'"></app-farms>
-          <app-schedules *ngSwitchCase="'get-schedules'"></app-schedules>
         </ng-container>
       </main>
     </div>
