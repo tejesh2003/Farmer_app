@@ -7,16 +7,16 @@ import { AddRole } from '../add-role/add-role';
 import { RemoveRole } from '../remove-role/remove-role';
 import { Getbill } from '../getbill/getbill';
 import { SchedulesDue } from '../schedules-due/schedules-due';
-import { CreateSchedule } from '../create-schedule/create-schedule';
-import { CreateFarm } from '../create-farm/create-farm';
 import { CreateFarmer } from '../create-farmer/create-farmer';
 import { FarmersWithCrop } from '../farmers-with-crop/farmers-with-crop';
+import { AllFarmers } from '../all-farmers/all-farmers';
+import { AllUsers } from '../all-users/all-users';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [[CommonModule, Navbar, FarmersByCrop, FarmersWithCrop, AddRole, RemoveRole, Getbill, SchedulesDue, CreateSchedule, CreateFarm,CreateFarmer]],
+  imports: [[CommonModule, Navbar, FarmersByCrop, FarmersWithCrop, AddRole, RemoveRole, Getbill, SchedulesDue,CreateFarmer, AllFarmers, AllUsers]],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

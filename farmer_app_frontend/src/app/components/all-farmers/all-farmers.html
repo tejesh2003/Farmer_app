@@ -1,3 +1,4 @@
+<ng-container *ngIf="user$ | async as user; else loading">
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
     <div
@@ -26,11 +27,18 @@
     <h2 class="text-xl font-bold mb-4">{{ selectedFarmer?.name }}</h2>
     <p class="mb-2"><span class="font-semibold">Phone:</span> {{ selectedFarmer?.phone }}</p>
     <p class="mb-2"><span class="font-semibold">Language:</span> {{ selectedFarmer?.language }}</p>
-    <p class="mb-4"><span class="font-semibold">Country :</span> {{ selectedFarmer?.country}}</p>
+    <p class="mb-4"><span class="font-semibold">Country:</span> {{ selectedFarmer?.country}}</p>
 
 
     <div class="flex items-center justify-between mb-2">
       <h3 class="text-lg font-semibold">Farms:</h3>
+      <button
+        *ngIf="user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_USER')"
+        class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
+        (click)="toggleFarmForm()"
+      >
+        Add Farm
+      </button>
     </div>
 
     <div class="space-y-4">
@@ -55,6 +63,14 @@
           </ul>
         </div>
 
+        <div *ngIf="user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_USER')" class="flex gap-2">
+          <button
+            class="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
+            (click)="toggleScheduleForm(farm.id)"
+          >
+            Add Schedule
+          </button>
+        </div>
       </div>
     </div>
 
@@ -67,3 +83,8 @@
       </button>
     </div>
   </div>
+</ng-container>
+
+<ng-template #loading>
+  <p class="p-4 text-center text-gray-500">Loading user info...</p>
+</ng-template>

@@ -32,3 +32,16 @@ class FarmService:
             raise ValueError(f"No farm found for schedule ID {schedule_id}")
 
         return FarmHelper.to_dict(farm_helper)
+    
+    @staticmethod
+    def get__all_farms():
+        farm_helpers = FarmRepository.get_all_farms()
+        if not farm_helpers:
+            return []
+        
+        filtered = []
+        for helper in farm_helpers:
+            farmer_dict = FarmHelper.to_dict(helper)
+            filtered.append(farmer_dict)
+
+        return filtered

@@ -1,13 +1,33 @@
 from flask import Blueprint, request, jsonify
-from app.services import FarmerService, FarmService, ScheduleService, User_Service
+from app.services import FarmerService, FarmService, ScheduleService, User_Service, CountryService
 from app.utils.validation_utils import ValidationUtils
 from app.models import Role
-from flask_jwt_extended import create_access_token , set_access_cookies, unset_jwt_cookies
+from flask_jwt_extended import create_access_token
 from app.middlewares.auth import with_jwt_data
 import bcrypt
 
 
 main_bp = Blueprint("main", __name__)
+
+
+
+@main_bp.route("/country", methods=["POST"])
+@with_jwt_data(allowed_roles=["ADMIN", "SUPER_USER"])
+def create_country_route(jwt_data):
+    try:
+        data = request.json
+
+        ValidationUtils.validate_country(data["country"])
+
+        country= CountryService.create_country(data["country"])
+        return jsonify(country), 201
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Something went wrong"}), 500
 
 #register
 @main_bp.route("/register",methods=["POST"])
@@ -255,11 +275,53 @@ def by_crop(jwt_data):
 
     return farmers, 200
 
-@main_bp.route("/farmers/with-crop", methods=["GET"])
+@main_bp.route("/farmers/with-crop", methods=["GET"])# show complete details
 @with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
 def with_crop(jwt_data):
     try:
         farmers = FarmerService.get_farmers_with_crop()
+        return farmers, 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+    
+@main_bp.route("/all-farmers", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
+def get_all_farmers(jwt_data):
+    try:
+        farmers = FarmerService.get_all_farmers()
+        return farmers, 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+    
+@main_bp.route("/all-users", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
+def get_all_users(jwt_data):
+    try:
+        users = User_Service.get_all_users()
+        return users, 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+    
+@main_bp.route("/all-farms", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
+def get_all_farms(jwt_data):
+    try:
+        farmers = FarmService.get__all_farms()
         return farmers, 200
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
@@ -287,3 +349,4 @@ def bill(farmer_id,jwt_data):
         import traceback
         traceback.print_exc()
         return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+    

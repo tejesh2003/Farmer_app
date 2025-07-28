@@ -2,8 +2,7 @@ version: '3.9'
 
 services:
   web:
-    build: .
-    container_name: farmer_web
+    image: farmer_app_web
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/farmer_db
     depends_on:
@@ -35,10 +34,8 @@ services:
     container_name: farmer_nginx
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - /etc/nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - web
     restart: always

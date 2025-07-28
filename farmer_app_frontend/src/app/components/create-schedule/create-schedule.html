@@ -1,33 +1,52 @@
-<form [formGroup]="scheduleForm" class="space-y-4 p-6 max-w-md mx-auto bg-white shadow rounded">
-  <div>
-    <label class="block text-sm text-gray-700 mb-1">Fertiliser</label>
-    <input type="text" formControlName="fertiliser" class="w-full p-2 border border-gray-300 rounded" />
-  </div>
+<app-navbar></app-navbar>
 
+<form [formGroup]="scheduleForm" class="space-y-4 mt-40 p-6 max-w-md mx-auto bg-white shadow rounded">
   <div>
-    <label class="block text-sm text-gray-700 mb-1">Quantity</label>
-    <input type="number" formControlName="quantity" class="w-full p-2 border border-gray-300 rounded" />
-  </div>
-
-  <div>
-    <label class="block text-sm text-gray-700 mb-1">Unit</label>
-    <select formControlName="unit" class="w-full p-2 border border-gray-300 rounded">
-      <option value="kg">kg</option>
-      <option value="L">L</option>
+    <label class="block text-sm text-gray-700 mb-1">Fertilizer</label>
+    <select
+      formControlName="fertiliser"
+      class="w-full p-2 border border-gray-300 rounded"
+    >
+      <option value="" disabled>Select Fertilizer</option>
+      <option *ngFor="let f of fertilizers" [value]="f.name">
+        {{ f.name }}
+      </option>
     </select>
   </div>
 
   <div>
-    <label class="block text-sm text-gray-700 mb-1">Days After Sowing</label>
-    <input type="number" formControlName="days_after_sowing" class="w-full p-2 border border-gray-300 rounded" />
+    <label class="block text-sm text-gray-700 mb-1">Quantity</label>
+    <input
+      type="number"
+      formControlName="quantity"
+      class="w-full p-2 border border-gray-300 rounded"
+    />
   </div>
 
   <div>
-    <label class="block text-sm text-gray-700 mb-1">Farm ID</label>
-    <input type="number" formControlName="farm_id" class="w-full p-2 border border-gray-300 rounded" />
+    <label class="block text-sm text-gray-700 mb-1">Unit</label>
+    <input
+      type="text"
+      formControlName="unit"
+      class="w-full p-2 border border-gray-300 rounded bg-gray-100"
+      readonly
+    />
   </div>
 
-  <button type="button" (click)="submit()" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700">
+  <div>
+    <label class="block text-sm text-gray-700 mb-1">Days After Sowing</label>
+    <input
+      type="number"
+      formControlName="days_after_sowing"
+      class="w-full p-2 border border-gray-300 rounded"
+    />
+  </div>
+
+  <button
+    type="button"
+    (click)="submit()"
+    class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700"
+  >
     Create Schedule
   </button>
 </form>

@@ -1,10 +1,23 @@
 <nav class="fixed top-0 left-0 w-full bg-green-200 shadow-md px-6 py-4 flex items-center justify-between z-50 h-18">
-  <div class="text-xl font-bold text-gray-800">
+ 
+  <div class="text-xl font-bold text-gray-800 cursor-pointer" (click)="goHome()">
     Farmer App
   </div>
 
+  <div class="absolute left-1/2 transform -translate-x-1/2">
+    <button
+      class="text-lg font-semibold text-gray-900 hover:text-black transition"
+      (click)="goHome()"
+    >
+      Home
+    </button>
+  </div>
+
   <div>
-    <button (click)="logout()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition">
+    <button
+      (click)="logout()"
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition"
+    >
       Logout
     </button>
   </div>

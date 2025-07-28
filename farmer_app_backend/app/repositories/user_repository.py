@@ -52,3 +52,9 @@ class UserRepository:
         db.session.commit()
         user_helper= User_Mapper.model_to_helper(user_model)
         return user_helper
+    
+    @staticmethod
+    def get_all_users():
+        user_models = User.query.all()
+        return [User_Mapper.model_to_helper(user) for user in user_models]
+  

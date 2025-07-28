@@ -7,8 +7,8 @@
 
         <ng-container *ngIf="user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_USER')">
           <button (click)="setView('create-farmer')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farmer'">Create Farmer</button>
-          <button (click)="setView('create-farm')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farm'">Create Farm</button>
-          <button (click)="setView('create-schedule')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-schedule'">Create Schedule</button>
+          <!-- <button (click)="setView('create-farm')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farm'">Create Farm</button>
+          <button (click)="setView('create-schedule')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-schedule'">Create Schedule</button> -->
           <button (click)="setView('add-role')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'add-role'">Add Role</button>
           <button (click)="setView('remove-role')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'remove-role'">Remove Role</button>
         </ng-container>
@@ -17,6 +17,8 @@
         <button (click)="setView('farmers-with-crop')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'farmers-with-crop'">Farmers with Crop</button>
         <button (click)="setView('bill')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'bill'">Get Bill</button>
         <button (click)="setView('schedules-due')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'schedules-due'">Schedules Due</button>
+        <button (click)="setView('all-farmers')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'all-farmers'">All Farmers</button>
+        <button (click)="setView('all-users')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-orange-100" [class.bg-orange-200]="activeView === 'all-users'">All Users</button>
       </aside>
 
       <main class="flex-grow p-6 overflow-y-auto">
@@ -26,14 +28,16 @@
           </div>
 
           <app-create-farmer *ngSwitchCase="'create-farmer'"></app-create-farmer>
-          <app-create-farm *ngSwitchCase="'create-farm'"></app-create-farm>
-          <app-create-schedule *ngSwitchCase="'create-schedule'"></app-create-schedule>
+          <!-- <app-create-farm *ngSwitchCase="'create-farm'"></app-create-farm>
+          <app-create-schedule *ngSwitchCase="'create-schedule'"></app-create-schedule> -->
           <app-add-role *ngSwitchCase="'add-role'"></app-add-role>
           <app-remove-role *ngSwitchCase="'remove-role'"></app-remove-role>
           <app-farmers-by-crop *ngSwitchCase="'farmers-by-crop'"></app-farmers-by-crop>
           <app-farmers-with-crop *ngSwitchCase="'farmers-with-crop'"></app-farmers-with-crop>
           <app-getbill *ngSwitchCase="'bill'"></app-getbill>
           <app-schedules-due *ngSwitchCase="'schedules-due'"></app-schedules-due>
+          <app-all-farmers *ngSwitchCase="'all-farmers'"></app-all-farmers>
+          <app-all-users *ngSwitchCase="'all-users'"></app-all-users>
         </ng-container>
       </main>
     </div>

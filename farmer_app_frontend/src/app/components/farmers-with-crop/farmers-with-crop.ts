@@ -11,22 +11,32 @@ import { Farmer } from '../../models/models';
   styleUrl: './farmers-with-crop.css'
 })
 export class FarmersWithCrop implements OnInit {
-  farmers: Farmer[] = [];
-  loading = true;
+   farmers: any[] = [];
+  selectedFarmer: any = null;
+  showPopup: boolean = false;
 
-  constructor(private farmerService: FarmerService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private farmerService: FarmerService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
-  ngOnInit(): void {
-    this.farmerService.getFarmersWithCrop().subscribe({
-      next: (res) => {
-        this.farmers = res;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Failed to fetch farmers:', err);
-        this.loading = false;
-      }
+  ngOnInit() {
+    this.farmerService.getFarmersWithCrop().subscribe(data => {
+      this.farmers = data;
+      this.cdr.detectChanges();
     });
   }
+
+  openPopup(farmer: any) {
+    this.selectedFarmer = farmer;
+    this.showPopup = true;
+    this.cdr.detectChanges();
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.selectedFarmer = null;
+    this.cdr.detectChanges();
+  }
+
 }

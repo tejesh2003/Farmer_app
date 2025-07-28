@@ -31,3 +31,8 @@ class FarmRepository:
             return None
 
         return Farm_Mapper.model_to_helper(farm)
+    
+    @staticmethod
+    def get_all_farms():
+        farms = Farm.query.all()
+        return [Farm_Mapper.model_to_helper(farm) for farm in farms]

@@ -10,7 +10,7 @@ export interface Farmer {
   phone: string;
   language: string;
   farm_ids: number[];
-  country_id:number;
+  country:number;
 }
 
 export interface CreateFarmer {

@@ -17,3 +17,8 @@ class CountryRepository:
         db.session.add(country_model)
         db.session.commit()
         return Country_Mapper.model_to_helper(country_model)
+
+    @staticmethod
+    def get_by_id(country_id: int):
+        country_model = Country.query.get(country_id)
+        return Country_Mapper.model_to_helper(country_model) if country_model else None

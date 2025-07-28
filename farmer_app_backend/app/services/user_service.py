@@ -72,5 +72,20 @@ class User_Service:
         user_dict = UserHelper.to_dict(new_user_helper)
         user_dict.pop("password_hash")
         return user_dict
+    
+    @staticmethod
+    def get_all_users():
+        user_helpers = UserRepository.get_all_users()
+        if not user_helpers:
+            return []
+
+        users = []
+        for helper in user_helpers:
+            user_dict = UserHelper.to_dict(helper)
+            user_dict.pop("password_hash", None)
+            users.append(user_dict)
+
+        return users
+
 
 

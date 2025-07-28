@@ -23,7 +23,12 @@ export class FarmerService {
 
   getFarmersWithCrop(): Observable<Farmer[]> {
     const url = `${this.baseUrl}/farmers/with-crop`;
-    return this.http.get<any[]>(url).pipe(map(this.transformFarmers));
+    return this.http.get<any>(url);
+  }
+
+  getAllFarmers(): Observable<any> {
+    const url = `${this.baseUrl}/all-farmers`;
+    return this.http.get<any>(url);
   }
 
   private transformFarmers = (data: any[]): Farmer[] =>
@@ -32,7 +37,7 @@ export class FarmerService {
       name: farmer.name,
       phone: farmer.phone,
       language: farmer.language,
-      country_id: farmer.country_id,
+      country: farmer.country,
       farm_ids: Array.isArray(farmer.farms) ? farmer.farms.map((f: any) => f.id) : [],
     }));
 }
