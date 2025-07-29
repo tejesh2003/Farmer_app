@@ -11,8 +11,8 @@ export class CountryService {
 
   constructor(private http: HttpClient) {}
 
-  createCountry(name: string): Observable<any> {
-    return this.http.post<any>(this.baseUrl, { name }); 
+  createCountry(country: string): Observable<any> {
+    return this.http.post<any>(this.baseUrl, country); 
   }
 
 

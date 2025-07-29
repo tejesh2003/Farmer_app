@@ -16,7 +16,7 @@ export class CreateCountry {
 
   constructor(private fb: FormBuilder, private countryService: CountryService, private cdr: ChangeDetectorRef) {
     this.countryForm = this.fb.group({
-      name: ['', Validators.required]
+      country: ['', Validators.required]
     });
   }
 

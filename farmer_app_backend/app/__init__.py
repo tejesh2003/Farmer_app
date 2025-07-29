@@ -12,7 +12,10 @@ def create_app():
     app.config.from_object(Config)
 
     CORS(app,
-     origins=["http://localhost:4200"],
+     origins=["http://localhost:4200",
+              "https://farmer-management-16e02.web.app",
+              "https://farmer-management-16e02.firebaseapp.com"
+              ],
      supports_credentials=True,
      methods=["GET", "POST", "OPTIONS"],
      allow_headers=["Content-Type", "Authorization"]
