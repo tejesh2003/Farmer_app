@@ -302,6 +302,20 @@ def get_all_farmers(jwt_data):
         import traceback
         traceback.print_exc()
         return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
+
+@main_bp.route("/all-countries", methods=["GET"])
+@with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])
+def get_all_countries(jwt_data):
+    try:
+        countries = CountryService.get_all_countries()
+        return countries, 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Unable to calculate bill: {str(e)}"}), 500
     
 @main_bp.route("/all-users", methods=["GET"])
 @with_jwt_data(allowed_roles=["USER", "ADMIN", "SUPER_USER"])

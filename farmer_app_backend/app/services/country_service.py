@@ -24,3 +24,12 @@ class CountryService:
     def get_country_by_id(country_id):
         country_helper = CountryRepository.get_by_id(country_id)
         return CountryHelper.to_dict(country_helper)
+    
+    @staticmethod
+    def get_all_countries():
+        country_helpers = CountryRepository.get_all_countries()
+        if not country_helpers:
+            return []
+    
+        return [{"id": country.id, "country_name": country.country_name} for country in country_helpers]
+

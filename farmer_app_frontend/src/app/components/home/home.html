@@ -6,6 +6,7 @@
         <h2 class="text-xl font-bold text-gray-800 mb-4">Menu</h2>
 
         <ng-container *ngIf="user.roles?.includes('ADMIN') || user.roles?.includes('SUPER_USER')">
+          <button (click)="setView('create-country')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-country'">Create Country</button>
           <button (click)="setView('create-farmer')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farmer'">Create Farmer</button>
           <!-- <button (click)="setView('create-farm')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-farm'">Create Farm</button>
           <button (click)="setView('create-schedule')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-green-100" [class.bg-green-200]="activeView === 'create-schedule'">Create Schedule</button> -->
@@ -28,6 +29,7 @@
           </div>
 
           <app-create-farmer *ngSwitchCase="'create-farmer'"></app-create-farmer>
+          <app-create-country *ngSwitchCase="'create-country'"></app-create-country>
           <!-- <app-create-farm *ngSwitchCase="'create-farm'"></app-create-farm>
           <app-create-schedule *ngSwitchCase="'create-schedule'"></app-create-schedule> -->
           <app-add-role *ngSwitchCase="'add-role'"></app-add-role>

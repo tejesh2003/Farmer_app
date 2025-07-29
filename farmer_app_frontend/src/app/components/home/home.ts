@@ -11,12 +11,13 @@ import { CreateFarmer } from '../create-farmer/create-farmer';
 import { FarmersWithCrop } from '../farmers-with-crop/farmers-with-crop';
 import { AllFarmers } from '../all-farmers/all-farmers';
 import { AllUsers } from '../all-users/all-users';
+import { CreateCountry } from '../create-country/create-country';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [[CommonModule, Navbar, FarmersByCrop, FarmersWithCrop, AddRole, RemoveRole, Getbill, SchedulesDue,CreateFarmer, AllFarmers, AllUsers]],
+  imports: [[CommonModule, Navbar, FarmersByCrop, FarmersWithCrop, AddRole, RemoveRole, Getbill, SchedulesDue,CreateFarmer, AllFarmers, AllUsers, CreateCountry]],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

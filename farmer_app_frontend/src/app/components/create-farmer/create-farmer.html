@@ -16,7 +16,12 @@
 
   <div>
     <label class="block text-sm text-gray-700 mb-1">Country</label>
-    <input type="text" formControlName="country" class="w-full p-2 border border-gray-300 rounded" />
+    <select formControlName="country" class="w-full p-2 border border-gray-300 rounded">
+      <option value="" disabled selected>Select a country</option>
+      <option *ngFor="let country of countries" [value]="country.country_name">
+        {{ country.country_name }}
+      </option>
+    </select>
   </div>
 
   <button type="button" (click)="submit()" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700">

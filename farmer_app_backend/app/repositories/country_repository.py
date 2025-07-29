@@ -22,3 +22,8 @@ class CountryRepository:
     def get_by_id(country_id: int):
         country_model = Country.query.get(country_id)
         return Country_Mapper.model_to_helper(country_model) if country_model else None
+
+    @staticmethod
+    def get_all_countries():
+        countries = Country.query.all()
+        return [Country_Mapper.model_to_helper(country) for country in countries]
